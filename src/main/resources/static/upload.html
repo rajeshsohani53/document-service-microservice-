@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document Upload — Test</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 520px;
+            margin: 60px auto;
+            padding: 0 20px;
+            color: #222;
+        }
+        h1 { font-size: 1.3rem; }
+        .box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        input[type="file"] { margin-bottom: 16px; display: block; }
+        button {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        button:disabled { background: #9ca3af; cursor: not-allowed; }
+        pre {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 14px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 20px;
+        }
+        .error { color: #b91c1c; }
+    </style>
+</head>
+<body>
+    <h1>Document Service — Upload Test</h1>
+    <div class="box">
+        <input type="file" id="fileInput" accept=".txt">
+        <button id="uploadBtn">Upload</button>
+        <pre id="result">Response will appear here...</pre>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8081/api/documents/upload";
+
+        const fileInput = document.getElementById("fileInput");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const result = document.getElementById("result");
+
+        uploadBtn.addEventListener("click", async () => {
+            const file = fileInput.files[0];
+
+            if (!file) {
+                result.textContent = "Please choose a file first.";
+                result.className = "error";
+                return;
+            }
+
+            // multipart/form-data — field name "file" must match @RequestParam("file")
+            const formData = new FormData();
+            formData.append("file", file);
+
+            uploadBtn.disabled = true;
+            result.className = "";
+            result.textContent = "Uploading...";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                result.className = "error";
+                result.textContent = "Request failed: " + err.message +
+                    "\n\n(If this says 'Failed to fetch', it's almost certainly CORS — see the note.)";
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
