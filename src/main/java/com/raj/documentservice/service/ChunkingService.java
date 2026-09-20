@@ -2,11 +2,13 @@ package com.raj.documentservice.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
-
+@Service
 public class ChunkingService {
 	public List<String> splitIntoChunks(String text) 
 	{
