@@ -25,7 +25,7 @@ The Document Service is **stateless** — it produces chunks and returns them. I
 ## Tech Stack
 
 - **Java 17**
-- **Spring Boot 3.3.5** (Spring Web + embedded Tomcat)
+- **Spring Boot 4.1.1** (Spring Web MVC + embedded Tomcat)
 - **Maven** (build & dependency management)
 - **LangChain4j 1.19.0** (document splitting) — versions managed via the LangChain4j **BOM**
 
@@ -66,7 +66,8 @@ curl -X POST http://localhost:8081/api/documents/upload \
   "chunks": [
     "first chunk text ...",
     "second chunk text ..."
-  ]
+  ],
+  "message": "File received successfully"
 }
 ```
 
@@ -130,6 +131,6 @@ document-service/
 │   ├── controller/DocumentController.java  # HTTP layer — upload endpoint
 │   └── service/ChunkingService.java        # logic layer — recursive splitting
 ├── src/main/resources/application.properties
-├── upload.html                             # manual test frontend
+├── src/main/resources/static/upload.html   # manual test frontend
 └── pom.xml
 ```
